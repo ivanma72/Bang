@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Random;
+
 
 public class BangActivity extends Activity {
 
@@ -35,7 +37,7 @@ public class BangActivity extends Activity {
             @Override
             public void onClick(View view) {
                 //find  random phone number from contacts
-                String pnumber = "9896986724";
+                /*String pnumber = "9896986724";
                 String message = "Hello World";
                 try {
                     PendingIntent sentPI = PendingIntent.getBroadcast(BangActivity.this, 0, new Intent("SMS_SENT"), 0);
@@ -47,7 +49,7 @@ public class BangActivity extends Activity {
                     dialog.setMessage(e.getMessage());
                     dialog.show();
 
-                }
+                }*/
 
                 fetchContacts();
             }
@@ -56,47 +58,51 @@ public class BangActivity extends Activity {
 
     public void fetchContacts(){
         String phoneNumber;
-
         Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
         String _ID = ContactsContract.Contacts._ID;
         String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
         String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
-
         Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
         String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-
         StringBuffer output = new StringBuffer();
-
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(CONTENT_URI, null,null, null, null);
 
+        //set up random contact row
+        int list_len = cursor.getCount();
+        long rand_seed = System.currentTimeMillis();
+        Random rnum = new Random(rand_seed);
+        int pos = rnum.nextInt(list_len);
+
         //Get a random person + phone number
-        if(cursor.getCount() > 0){
-            cursor.moveToPosition(10);
-
-            String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
-            String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-
-            int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
-
-            if(hasPhoneNumber > 0){
-               output.append("\n First Name:" + name);
-
-               Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?",
-                    new String[]{contact_id}, null);
-
-               while(phoneCursor.moveToNext()){
-                    phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                    output.append("\n Phone number: " + phoneNumber);
-                }
-                phoneCursor.close();
-            }
+        if(cursor.getCount() == 0){
+            return;
         }
 
-        bangTextView.setText(output);
-    }
+        cursor.moveToPosition(pos);
+        String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
+        String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+        int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
 
+        while(hasPhoneNumber == 0){
+            pos = rnum.nextInt(list_len);
+            hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+        }
+
+        output.append("\n First Name:" + name);
+        Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?",
+                new String[]{contact_id}, null);
+
+        if(phoneCursor.moveToNext()){
+            phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+            output.append("\n Phone number: " + phoneNumber);
+        }
+        phoneCursor.close();
+
+        bangTextView.setText(output);
+        cursor.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
