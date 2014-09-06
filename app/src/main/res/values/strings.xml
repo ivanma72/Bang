@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="bang_text">Bang!</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="send_to">Share Bang!</string>
 
 </resources>

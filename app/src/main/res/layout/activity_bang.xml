@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="#FF699F"
     tools:context=".BangActivity">
 
     <Button
+        android:id="@+id/bang_button"
         android:onClick="bang"
         android:background="@drawable/button_selector"
-        android:id="@+id/bang_button"
         android:text="@string/bang_text"
         android:fontFamily="sans-serif-condensed"
         android:textSize="72sp"
@@ -17,7 +16,48 @@
         android:textColor="#F8F8FF"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:paddingBottom="10dp"/>
+        android:paddingBottom="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72dp"/>
+
+    <LinearLayout android:layout_alignParentBottom="true"
+                  android:layout_marginBottom="32dp"
+                  android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:gravity="center"
+                  android:id="@+id/linearlayout">
+        <ImageButton
+            android:id="@+id/settings_button"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/setting_selector"
+            android:layout_marginRight="40dp"/>
+
+        <ImageButton
+            android:onClick="share"
+            android:id="@+id/share_button"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/share_selector"
+            android:layout_marginLeft="40dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/outputTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearlayout"
+        android:layout_centerHorizontal="true"
+        android:textColor="#F8F8FF"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"/>
+
 
 
 </RelativeLayout>

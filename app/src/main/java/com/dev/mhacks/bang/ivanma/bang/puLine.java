@@ -14,10 +14,6 @@ public class puLine{
         line = line_in;
     }
 
-    public puLine(String line){
-        super();
-        this.line = line;
-    }
     public long getKey(){
         return this.key;
     }

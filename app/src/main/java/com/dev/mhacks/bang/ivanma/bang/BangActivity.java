@@ -14,11 +14,19 @@ import android.view.View;
 import android.util.Log;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextSwitcher;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 
 public class BangActivity extends Activity {
+
+    private TextView outputTxt;
 
     ContentResolver cr;
     ArrayList<Integer> contacts;
@@ -30,14 +38,7 @@ public class BangActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bang);
 
-        // Hide status bar
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-        // Remember that you should never show the action bar if the
-        // status bar is hidden, so hide that too if necessary.
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        outputTxt = (TextView)findViewById(R.id.outputTxt);
 
         puDB = new MySQLiteHelper(this);
 
@@ -61,7 +62,8 @@ public class BangActivity extends Activity {
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                         // do something with the Mobile number here...
-                        contacts.add(cursor.getPosition());
+                        if(number.length() >= 10)
+                            contacts.add(cursor.getPosition());
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
                         // do something with the Work number here...
@@ -116,7 +118,8 @@ public class BangActivity extends Activity {
                 case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                     // do something with the Mobile number here...
                     String message = findMessage();
-                    sendMessage(message, "3152562973");
+                    sendMessage(message, "3152562973");//input number for random Number
+                    printMessage(message, name);
                     Log.i("BangActivity", "sendMessage called on number " + number);
                     flag = true;
                     break;
@@ -146,8 +149,26 @@ public class BangActivity extends Activity {
     private String findMessage(){
         String puLine;
         Random r = new Random();
-        long idx = r.nextInt((int)puDB.getSize());
+        long idx = r.nextInt((int) puDB.getSize());
         puLine = puDB.getLine(idx);
         return puLine;
+    }
+
+    //activated when share button is clicked
+    public void share(View view){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this new app called Bang!");
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+    }
+
+    private void printMessage(String message, String contactId){
+        outputTxt.setText( contactId + "\n\n" + message);
+        Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        anim.setDuration(2000);
+        outputTxt.startAnimation(anim);
+
+        return;
     }
 }
