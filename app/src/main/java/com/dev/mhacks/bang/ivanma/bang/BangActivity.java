@@ -28,6 +28,19 @@ public class BangActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bang);
 
+        MySQLiteHelper puDB = new MySQLiteHelper(this);
+        puLine pu = new puLine();
+        pu.setKey(23);
+        pu.setLine("adasda");
+        puDB.addLine(pu);
+
+        Log.i("Bang", puDB.getLine(23));
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(BangActivity.this);
+        AlertDialog dialog = alertDialogBuilder.create();
+        dialog.setMessage(puDB.getLine(23));
+        dialog.show();
+
         contacts = new ArrayList<Integer>();
 
         cr = getContentResolver();
