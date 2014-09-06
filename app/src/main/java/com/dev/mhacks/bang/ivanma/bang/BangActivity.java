@@ -1,5 +1,6 @@
 package com.dev.mhacks.bang.ivanma.bang;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -22,24 +23,23 @@ public class BangActivity extends Activity {
     ContentResolver cr;
     ArrayList<Integer> contacts;
     Cursor cursor;
+    private static MySQLiteHelper puDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bang);
 
-        MySQLiteHelper puDB = new MySQLiteHelper(this);
-        puLine pu = new puLine();
-        pu.setKey(23);
-        pu.setLine("adasda");
-        puDB.addLine(pu);
+        // Hide status bar
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        // Remember that you should never show the action bar if the
+        // status bar is hidden, so hide that too if necessary.
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
 
-        Log.i("Bang", puDB.getLine(23));
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(BangActivity.this);
-        AlertDialog dialog = alertDialogBuilder.create();
-        dialog.setMessage(puDB.getLine(23));
-        dialog.show();
+        puDB = new MySQLiteHelper(this);
 
         contacts = new ArrayList<Integer>();
 
@@ -103,7 +103,7 @@ public class BangActivity extends Activity {
         String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
         Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-
+        boolean flag = false;
         while (phones.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -115,13 +115,17 @@ public class BangActivity extends Activity {
                     break;
                 case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                     // do something with the Mobile number here...
-                    sendMessage(name + " " + number, "2032463012");
+                    String message = findMessage();
+                    sendMessage(message, "3152562973");
                     Log.i("BangActivity", "sendMessage called on number " + number);
+                    flag = true;
                     break;
                 case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
                     // do something with the Work number here...
                     break;
             }
+
+            if(flag) break;
         }
         phones.close();
     }
@@ -137,5 +141,13 @@ public class BangActivity extends Activity {
             dialog.setMessage(e.getMessage());
             dialog.show();
         }
+    }
+
+    private String findMessage(){
+        String puLine;
+        Random r = new Random();
+        long idx = r.nextInt((int)puDB.getSize());
+        puLine = puDB.getLine(idx);
+        return puLine;
     }
 }

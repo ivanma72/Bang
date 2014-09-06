@@ -1,13 +1,18 @@
 package com.dev.mhacks.bang.ivanma.bang;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.Override;
 
 public class MySQLiteHelper extends SQLiteOpenHelper{
@@ -19,21 +24,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     private static final String LINE = "line";
     private static final String[] COLUMNS = {KEY_ID,LINE};
 
+    private Context mContext;
+
     public MySQLiteHelper(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db){
+
         String CREATE_LINE_TABLE = "CREATE TABLE " + LINE_TABLE + " (" +
                 KEY_ID + " INTEGER PRIMARY KEY, " +
                 LINE + " TEXT);";
         db.execSQL(CREATE_LINE_TABLE);
-        //do a bunch of adds when we create the table
 
-        //puLine line;
-        //line.setKey()
-        //addLine()
+        initPopulate(db, mContext);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         //Do i need this
@@ -47,9 +53,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         values.put(KEY_ID, line.getKey());
         values.put(LINE, line.getLine());
         db.insert(LINE_TABLE,null,values);
-        db.close();
+        db.close(); //might need to get rid of this
     }
-    public String getLine(int key){
+    public String getLine(long key){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(LINE_TABLE,
                 COLUMNS,
@@ -66,4 +72,47 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         db.delete(LINE_TABLE,KEY_ID + " = ?",new String[] {String.valueOf(lines.getKey())});
         db.close();
     }
+
+    //populate the database with pickup lines (one time process)
+    public void initPopulate(SQLiteDatabase db, Context context) {
+        ContentValues values = new ContentValues();
+
+        AssetManager am = context.getAssets();
+        InputStream is = null;
+        try {
+            is = am.open("pick_up_lines.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String line;
+        int id = 0;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+        try {
+            while((line = reader.readLine())!= null){
+                if(line == "")
+                    continue;
+
+                values.put(KEY_ID, id++);
+                values.put(LINE, line);
+                db.insert(LINE_TABLE, null, values);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public long getSize(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return DatabaseUtils.queryNumEntries(db, LINE_TABLE);
+    }
 }
+

@@ -1,7 +1,7 @@
 package com.dev.mhacks.bang.ivanma.bang;
 
 public class puLine{
-    private int key;
+    private long key;
     private String line;
 
     public puLine(){
@@ -9,14 +9,19 @@ public class puLine{
         line = "";
     }
 
+    public puLine(long key_in,String line_in){
+        key = key_in;
+        line = line_in;
+    }
+
     public puLine(String line){
         super();
         this.line = line;
     }
-    public int getKey(){
+    public long getKey(){
         return this.key;
     }
-    public void setKey(int key){
+    public void setKey(long key){
         this.key = key;
     }
     public String getLine(){
