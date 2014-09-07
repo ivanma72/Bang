@@ -29,18 +29,25 @@
                   android:id="@+id/linearlayout">
         <ImageButton
             android:id="@+id/settings_button"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:background="@drawable/setting_selector"
-            android:layout_marginRight="40dp"/>
+            android:layout_marginRight="60dp"/>
+
+        <ImageButton
+            android:onClick="info"
+            android:id="@+id/info_button"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="@drawable/info_selector"/>
 
         <ImageButton
             android:onClick="share"
             android:id="@+id/share_button"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:background="@drawable/share_selector"
-            android:layout_marginLeft="40dp"/>
+            android:layout_marginLeft="60dp"/>
 
     </LinearLayout>
 
