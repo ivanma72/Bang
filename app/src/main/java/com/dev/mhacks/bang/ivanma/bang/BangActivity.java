@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.util.Log;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -165,12 +162,14 @@ public class BangActivity extends Activity {
 
     public void fadeIn(){
 
-        Animation fadein = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-
-        bangButton.startAnimation(fadein);
-        settingsButton.startAnimation(fadein);
-        infoButton.startAnimation(fadein);
-        shareButton.startAnimation(fadein);
+        Animation faderight = AnimationUtils.loadAnimation(this, R.anim.fade_right);
+        Animation fadeleft = AnimationUtils.loadAnimation(this, R.anim.fade_left);
+        Animation fadetop = AnimationUtils.loadAnimation(this, R.anim.fade_top);
+        Animation fadebottom = AnimationUtils.loadAnimation(this, R.anim.fade_bottom);
+        bangButton.startAnimation(fadetop);
+        settingsButton.startAnimation(fadeleft);
+        infoButton.startAnimation(fadebottom);
+        shareButton.startAnimation(faderight);
 
     }
 
