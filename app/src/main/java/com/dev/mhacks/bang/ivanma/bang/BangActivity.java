@@ -201,7 +201,7 @@ public class BangActivity extends Activity {
     public void share(View view){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this new app called Bang!");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "You should go Bang! your friends!");
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
     }
@@ -217,7 +217,7 @@ public class BangActivity extends Activity {
     }
 
     //if user clicks text, it goes away
-    public void showText(View v){
+    public void fadeText(View v){
         Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
         anim.setFillAfter(true);
         anim.setDuration(1000);

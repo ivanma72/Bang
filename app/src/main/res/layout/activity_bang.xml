@@ -52,7 +52,7 @@
     </LinearLayout>
 
     <TextView
-        android:onClick="showText"
+        android:onClick="fadeText"
         android:gravity="center"
         android:id="@+id/outputTxt"
         android:layout_width="wrap_content"
