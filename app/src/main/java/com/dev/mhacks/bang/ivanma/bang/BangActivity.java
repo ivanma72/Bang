@@ -6,8 +6,11 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -179,6 +182,22 @@ public class BangActivity extends Activity {
         return puLine;
     }
 
+    public void info(View view){
+        ContextThemeWrapper themedContext;
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+            themedContext = new ContextThemeWrapper( BangActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar );
+        }
+        else {
+            themedContext = new ContextThemeWrapper( BangActivity.this, android.R.style.Theme_Light_NoTitleBar );
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(themedContext);
+        builder.setView(getLayoutInflater().inflate(R.layout.info_alert, null));
+        builder.setPositiveButton(R.string.close, null);
+        builder.create();
+
+        builder.show();
+    }
+
     //activated when share button is clicked
     public void share(View view){
         Intent sendIntent = new Intent();
@@ -188,12 +207,23 @@ public class BangActivity extends Activity {
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
     }
 
+    //animation for fade in text animation when bang button pressed
     private void printMessage(String message, String contactId){
+        outputTxt.setClickable(true);
         outputTxt.setText( contactId + "\n\n" + message);
         Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
         anim.setDuration(2000);
         outputTxt.startAnimation(anim);
-
         return;
+    }
+
+    //if user clicks text, it goes away
+    public void showText(View v){
+        Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+        anim.setFillAfter(true);
+        anim.setDuration(1000);
+        outputTxt.startAnimation(anim);
+        outputTxt.setClickable(false);
+
     }
 }

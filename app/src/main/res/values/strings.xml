@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Bang</string>
+    <string name="app_name">Bang!</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="bang_text">Bang!</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="send_to">Share Bang!</string>
+    <string name="about">About Bang</string>
+    <string name="about_text">This app was created by Ivan Ma, Noah Nuechterlein, Michael Esses, and James Chapman for MHacks 2014</string>
+    <string name="description_text">The new way of playing Russian roulette!</string>
+    <string name="close">Close</string>
 
 </resources>

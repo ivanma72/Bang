@@ -52,6 +52,7 @@
     </LinearLayout>
 
     <TextView
+        android:onClick="showText"
         android:gravity="center"
         android:id="@+id/outputTxt"
         android:layout_width="wrap_content"
@@ -63,7 +64,8 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginBottom="12dp"
-        android:padding="16dp"/>
+        android:padding="16dp"
+        android:clickable="true"/>
 
 
 
