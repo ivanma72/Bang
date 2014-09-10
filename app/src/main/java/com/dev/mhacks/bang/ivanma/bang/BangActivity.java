@@ -132,7 +132,7 @@ public class BangActivity extends Activity {
                 case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                     // do something with the Mobile number here...
                     String message = findMessage();
-                    sendMessage(message, "3152562973");//input number for random Number
+                    sendMessage(message, name);//input number for random Number
                     printMessage(message, name);
                     Log.i("BangActivity", "sendMessage called on number " + number);
                     flag = true;
@@ -201,7 +201,7 @@ public class BangActivity extends Activity {
     public void share(View view){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "You should go Bang! your friends!");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "You should go Bang! your friends - http://bit.ly/bangapp2014");
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
     }
