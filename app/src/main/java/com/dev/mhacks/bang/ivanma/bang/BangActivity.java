@@ -5,16 +5,14 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.view.ContextThemeWrapper;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.util.Log;
-import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.telephony.SmsManager;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -35,7 +33,7 @@ public class BangActivity extends Activity {
     private TextView outputTxt;
 
     ContentResolver cr;
-    ArrayList<Integer> contacts;
+    ArrayList<Integer> contacts; //ArrayList to store all contacts
     Cursor cursor;
     private static MySQLiteHelper puDB;
 
@@ -51,7 +49,7 @@ public class BangActivity extends Activity {
         shareButton = (ImageButton)findViewById(R.id.share_button);
         outputTxt = (TextView)findViewById(R.id.outputTxt);
 
-        //do animation
+        //do startup animation
         fadeIn();
 
         puDB = new MySQLiteHelper(this);
@@ -88,26 +86,13 @@ public class BangActivity extends Activity {
         }
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.bang, menu);
-        return true;
+    protected void onStart() {
+        super.onStart();
+        fadeIn(); //animations should occur even if user hits home button and re-enters app
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    //Bang button callback
     public void bang(View view) {
         Random r = new Random();
         Integer idx = r.nextInt(contacts.size());
@@ -147,6 +132,7 @@ public class BangActivity extends Activity {
         phones.close();
     }
 
+    //helper function that sends an a given message to a number via SMS
     private void sendMessage(String message, String number) {
         try {
             PendingIntent pi = PendingIntent.getBroadcast(BangActivity.this, 0, new Intent("SMS_SENT"), 0);
@@ -160,19 +146,15 @@ public class BangActivity extends Activity {
         }
     }
 
+    //helper function for start-up animations
     public void fadeIn(){
-
-        Animation faderight = AnimationUtils.loadAnimation(this, R.anim.fade_right);
-        Animation fadeleft = AnimationUtils.loadAnimation(this, R.anim.fade_left);
-        Animation fadetop = AnimationUtils.loadAnimation(this, R.anim.fade_top);
-        Animation fadebottom = AnimationUtils.loadAnimation(this, R.anim.fade_bottom);
-        bangButton.startAnimation(fadetop);
-        settingsButton.startAnimation(fadeleft);
-        infoButton.startAnimation(fadebottom);
-        shareButton.startAnimation(faderight);
-
+        bangButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_top));
+        settingsButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_left));
+        infoButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_bottom));
+        shareButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_right));
     }
 
+    //gets a random message from our SQLite DB
     private String findMessage(){
         String puLine;
         Random r = new Random();
@@ -181,6 +163,7 @@ public class BangActivity extends Activity {
         return puLine;
     }
 
+    //Info button callback that displays AlertDialog
     public void info(View view){
         ContextThemeWrapper themedContext;
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
@@ -197,7 +180,7 @@ public class BangActivity extends Activity {
         builder.show();
     }
 
-    //activated when share button is clicked
+    //Share button callback that brings up intent list
     public void share(View view){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -210,19 +193,17 @@ public class BangActivity extends Activity {
     private void printMessage(String message, String contactId){
         outputTxt.setClickable(true);
         outputTxt.setText( contactId + "\n\n" + message);
-        Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-        anim.setDuration(2000);
-        outputTxt.startAnimation(anim);
-        return;
+        Animation fadein = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        fadein.setDuration(2000);
+        outputTxt.startAnimation(fadein);
     }
 
-    //if user clicks text, it goes away
+    //if user clicks text-> text fades
     public void fadeText(View v){
-        Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
-        anim.setFillAfter(true);
-        anim.setDuration(1000);
-        outputTxt.startAnimation(anim);
+        Animation fadeout = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+        fadeout.setFillAfter(true);
+        fadeout.setDuration(1000);
+        outputTxt.startAnimation(fadeout);
         outputTxt.setClickable(false);
-
     }
 }

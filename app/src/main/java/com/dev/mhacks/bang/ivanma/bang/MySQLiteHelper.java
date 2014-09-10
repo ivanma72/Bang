@@ -7,13 +7,11 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.Override;
 
 public class MySQLiteHelper extends SQLiteOpenHelper{
 
@@ -64,8 +62,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 null,null,null,null);
         if (cursor != null)
             cursor.moveToFirst();
-        String line = cursor.getString(1);
-        return line;
+
+        return cursor.getString(1);
     }
     public void delete(puLine lines){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -78,18 +76,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
 
         AssetManager am = context.getAssets();
-        InputStream is = null;
+        InputStream is;
         try {
             is = am.open("pick_up_lines.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        String line;
-        int id = 0;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line;
+            int id = 0;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-        try {
             while((line = reader.readLine())!= null){
                 if(line == "")
                     continue;
@@ -97,13 +91,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 values.put(KEY_ID, id++);
                 values.put(LINE, line);
                 db.insert(LINE_TABLE, null, values);
-
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -26,12 +26,12 @@
                   android:layout_height="wrap_content"
                   android:layout_width="match_parent"
                   android:gravity="center"
-                  android:id="@+id/linearlayout">
+                  android:id="@+id/bottom_row">
         <ImageButton
             android:id="@+id/settings_button"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:background="@drawable/setting_selector"
+            android:background="@drawable/settings_selector"
             android:layout_marginRight="60dp"/>
 
         <ImageButton
@@ -57,7 +57,7 @@
         android:id="@+id/outputTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearlayout"
+        android:layout_above="@+id/bottom_row"
         android:layout_centerHorizontal="true"
         android:textColor="#F8F8FF"
         android:fontFamily="sans-serif-condensed"
