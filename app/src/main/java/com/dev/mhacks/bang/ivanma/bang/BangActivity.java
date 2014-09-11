@@ -33,7 +33,7 @@ public class BangActivity extends Activity {
     private TextView outputTxt;
 
     ContentResolver cr;
-    ArrayList<Integer> contacts; //ArrayList to store all contacts
+    ArrayList<Integer> contactPositions; //Stores all cursor positions of contacts in contact table
     Cursor cursor;
     private static MySQLiteHelper puDB;
 
@@ -53,11 +53,11 @@ public class BangActivity extends Activity {
         startUpAnimate();
 
         puDB = new MySQLiteHelper(this);
-
-        contacts = new ArrayList<Integer>();
+        contactPositions = new ArrayList<Integer>();
+        String [] projection = {ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME};
 
         cr = getContentResolver();
-        cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, projection, null, null, null);
 
         while (cursor.moveToNext()) {
             String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
@@ -65,7 +65,9 @@ public class BangActivity extends Activity {
                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
 
             while (phones.moveToNext()) {
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                //not used at the moment
+                //String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
                 String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 int type = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                 switch (type) {
@@ -73,9 +75,9 @@ public class BangActivity extends Activity {
                         // do something with the Home number here...
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-                        // do something with the Mobile number here...
+                        //only store positions of phone numbers that have > 10 digits
                         if(number.length() >= 10)
-                            contacts.add(cursor.getPosition());
+                            contactPositions.add(cursor.getPosition());
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
                         // do something with the Work number here...
@@ -95,9 +97,9 @@ public class BangActivity extends Activity {
     //Bang button callback
     public void bang(View view) {
         Random r = new Random();
-        Integer idx = r.nextInt(contacts.size());
+        Integer idx = r.nextInt(contactPositions.size());
 
-        if (!cursor.moveToPosition(contacts.get(idx))) {
+        if (!cursor.moveToPosition(contactPositions.get(idx))) {
             return;
         }
 
@@ -119,7 +121,6 @@ public class BangActivity extends Activity {
                     String message = findMessage();
                     sendMessage(message, "3152562973");//input number for random Number
                     printMessage(message, name);
-                    Log.i("BangActivity", "sendMessage called on number " + number);
                     flag = true;
                     break;
                 case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
