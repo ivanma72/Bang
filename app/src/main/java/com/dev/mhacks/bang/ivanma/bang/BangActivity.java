@@ -50,7 +50,7 @@ public class BangActivity extends Activity {
         outputTxt = (TextView)findViewById(R.id.outputTxt);
 
         //do startup animation
-        fadeIn();
+        startUpAnimate();
 
         puDB = new MySQLiteHelper(this);
 
@@ -89,7 +89,7 @@ public class BangActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        fadeIn(); //animations should occur even if user hits home button and re-enters app
+        startUpAnimate(); //animations should occur even if user hits home button and re-enters app
     }
 
     //Bang button callback
@@ -117,7 +117,7 @@ public class BangActivity extends Activity {
                 case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                     // do something with the Mobile number here...
                     String message = findMessage();
-                    sendMessage(message, name);//input number for random Number
+                    sendMessage(message, "3152562973");//input number for random Number
                     printMessage(message, name);
                     Log.i("BangActivity", "sendMessage called on number " + number);
                     flag = true;
@@ -147,7 +147,7 @@ public class BangActivity extends Activity {
     }
 
     //helper function for start-up animations
-    public void fadeIn(){
+    public void startUpAnimate(){
         bangButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_top));
         settingsButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_left));
         infoButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_bottom));
